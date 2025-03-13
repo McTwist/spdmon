@@ -139,7 +139,7 @@ namespace spdmon
             }
 
             buf.reserve(buf.size() + width * 3);
-            auto it = std::back_inserter(buf);
+            auto it = fmt::appender(buf);
 
             const auto complete = static_cast<unsigned int>(frac * static_cast<float>(width * nsyms_));
             const size_t full_blocks = complete / nsyms_;
@@ -198,7 +198,7 @@ namespace spdmon
 
             if (total_ == 0)
             {
-                fmt::format_to(buf, kNoTotalFmt, fmt::arg("desc", desc_),
+                fmt::format_to(fmt::appender(buf), kNoTotalFmt, fmt::arg("desc", desc_),
                                fmt::arg("n", n_),
                                fmt::arg("elapsed", elapsed),
                                fmt::arg("eol", kTermEol));
@@ -213,13 +213,13 @@ namespace spdmon
 
             const float percent = frac * 100;
 
-            fmt::format_to(buf, kLbarFmt, fmt::arg("desc", desc_),
-                           fmt::arg("frac", percent));
-            fmt::format_to(right, kRbarFmt, fmt::arg("n", n_),
-                           fmt::arg("total", total_),
-                           fmt::arg("elapsed", elapsed),
-                           fmt::arg("remaining", remaining),
-                           fmt::arg("eol", kTermEol));
+            fmt::format_to(fmt::appender(buf), kLbarFmt, fmt::arg("desc", desc_),
+                          fmt::arg("frac", percent));
+            fmt::format_to(fmt::appender(right), kRbarFmt, fmt::arg("n", n_),
+                          fmt::arg("total", total_),
+                          fmt::arg("elapsed", elapsed),
+                          fmt::arg("remaining", remaining),
+                          fmt::arg("eol", kTermEol));
 
             const auto space_for_bar = static_cast<int>(width - buf.size() - right.size() + kTermEol.size());
             if (space_for_bar > 0)

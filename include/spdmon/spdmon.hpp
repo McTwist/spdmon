@@ -221,7 +221,7 @@ namespace spdmon
                            fmt::arg("remaining", remaining),
                            fmt::arg("eol", kTermEol));
 
-            const auto space_for_bar = static_cast<unsigned int>(width - buf.size() - right.size() + kTermEol.size());
+            const auto space_for_bar = static_cast<int>(width - buf.size() - right.size() + kTermEol.size());
             if (space_for_bar > 0)
             {
                 FormatBarTo(buf, space_for_bar, frac);

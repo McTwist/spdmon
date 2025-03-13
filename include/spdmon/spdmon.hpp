@@ -6,7 +6,7 @@
 #include <atomic>
 #include <iostream>
 
-#include <spdlog/fmt/bundled/chrono.h>
+#include <spdlog/fmt/chrono.h>
 #include <spdlog/common.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/details/console_globals.h>

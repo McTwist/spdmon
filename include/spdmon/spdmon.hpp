@@ -690,6 +690,7 @@ namespace spdmon
         ~LoggerProgress()
         {
             spdlog::set_default_logger(default_logger_);
+            spdlog::drop(custom_logger_->name());
         };
 
         SPDMON_DECLARE_NON_COPYABLE(LoggerProgress)

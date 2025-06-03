@@ -205,7 +205,7 @@ namespace spdmon
 
             if (total_ == 0)
             {
-                fmt::format_to(fmt::appender(buf), kNoTotalFmt, fmt::arg("desc", desc_),
+                fmt::format_to(fmt::appender(buf), mNoTotalFmt, fmt::arg("desc", desc_),
                                fmt::arg("n", n_.load()),
                                fmt::arg("elapsed", elapsed),
                                fmt::arg("eol", kTermEol));
@@ -220,7 +220,7 @@ namespace spdmon
 
             const float percent = frac * 100;
 
-            fmt::format_to(fmt::appender(buf), kLbarFmt, fmt::arg("desc", desc_),
+            fmt::format_to(fmt::appender(buf), mLbarFmt, fmt::arg("desc", desc_),
                           fmt::arg("frac", percent));
             fmt::format_to(fmt::appender(right), mRbarFmt, fmt::arg("n", n_.load()),
                           fmt::arg("total", total_),
@@ -238,6 +238,24 @@ namespace spdmon
         }
 
         virtual void ShowProgress(timepoint_t now = clock_t::now()) = 0;
+
+        void SetLbarFmt(const std::string & f)
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            mLbarFmt = f;
+        }
+
+        void SetRbarFmt(const std::string & f)
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            mRbarFmt = f;
+        }
+
+        void SetNoTotalFmt(const std::string & f)
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            mNoTotalFmt = f;
+        }
 
     private:
         std::atomic<unsigned int> n_{0};
@@ -258,6 +276,10 @@ namespace spdmon
         const std::string kLbarFmt = "{desc}: {frac:3.0f}% |";
         const std::string kRbarFmt = "| {n}/{total} [{elapsed:%T} / {remaining:%T}]{eol}";
         const std::string kNoTotalFmt = "{desc}: {n} [{elapsed:%T}]{eol}";
+
+        std::string mLbarFmt = kLbarFmt;
+        std::string mRbarFmt = kRbarFmt;
+        std::string mNoTotalFmt = kNoTotalFmt;
     };
 
     /* Progress monitor writing directly to a file */
